@@ -4,7 +4,7 @@ using System.Text;
 
 namespace tabuleiro
 {
-    class Peca
+    abstract class Peca
     {
 
         public Posicao PosicaoPeca { get; set; }
@@ -24,5 +24,8 @@ namespace tabuleiro
         {
             QtdDeMovimentos++;
         }
+
+        public abstract bool[,] MovimentosPossiveis();
+        
     }
 }
