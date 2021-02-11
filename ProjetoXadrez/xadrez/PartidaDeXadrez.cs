@@ -24,6 +24,22 @@ namespace xadrez
 
         }
 
+        public int _turno()
+        {
+            return Turno;
+        }
+
+        public Cor _jogadorAtual()
+        {
+            return JogadorAtual;
+        }
+
+        public void RealizaJogada(Posicao origem, Posicao destino)
+        {
+            ExecutaMovimento(origem, destino);
+            Turno++;
+            MudaJogador();
+        }
         public void ExecutaMovimento(Posicao origem, Posicao destino)
         {
             Peca p = Tab.RetirarPeca(origem);
@@ -34,6 +50,17 @@ namespace xadrez
 
         }
 
+        private void MudaJogador()
+        {
+            if(JogadorAtual == Cor.Branca)
+            {
+                JogadorAtual = Cor.Preta;
+            }
+            else if (JogadorAtual == Cor.Preta)
+            {
+                JogadorAtual = Cor.Branca;
+            }
+        }
         private void ColocarPecas()
         {
             Tab.ColocarPeca(new Torre(Cor.Branca, Tab), new PosicaoXadrez('c', 1).ToPosicao());
@@ -49,6 +76,36 @@ namespace xadrez
             Tab.ColocarPeca(new Torre(Cor.Preta, Tab), new PosicaoXadrez('e', 8).ToPosicao());
             Tab.ColocarPeca(new Torre(Cor.Preta, Tab), new PosicaoXadrez('e', 7).ToPosicao());
             Tab.ColocarPeca(new Rei(Cor.Preta, Tab), new PosicaoXadrez('d', 8).ToPosicao());
+
+
+        }
+    
+    
+        public void ValidarPosicaoDeOrigem(Posicao pos)
+        {
+            if(Tab._peca(pos) == null)
+            {
+                throw new TabuleiroException("Não existe peça na posição de origem!");
+            }
+           
+            if(JogadorAtual != Tab._peca(pos).CorPeca)
+            {
+                throw new TabuleiroException("Vez do outro jogador!");
+            }
+
+            if(Tab._peca(pos).ExistemMovimentosPossiveis() == false)
+            {
+                throw new TabuleiroException("Não há movimentos possíveis para a peça de origem escolhida!");
+            }
+        }
+
+
+        public void ValidarPosicaoDestino(Posicao origem, Posicao destino)
+        {
+            if (!Tab._peca(origem).PodeMoverPara(destino))
+            {
+                throw new TabuleiroException("Posicao de destino invalida!");
+            }
         }
     }
 }
