@@ -49,6 +49,11 @@ namespace tabuleiro
             QtdDeMovimentos++;
         }
 
+        public void DecrescerQtdMovimentos()
+        {
+            QtdDeMovimentos--;
+        }
+
         public abstract bool[,] MovimentosPossiveis();
         
     }
