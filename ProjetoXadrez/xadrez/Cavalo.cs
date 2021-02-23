@@ -86,7 +86,7 @@ namespace xadrez
             }
 
             //abaixo e esquerda
-            pos.DefinirValores(PosicaoPeca.Linha + 2, PosicaoPeca.Coluna + 2);
+            pos.DefinirValores(PosicaoPeca.Linha + 2, PosicaoPeca.Coluna - 1);
             if (Tab.PosicaoValida(pos) == true && PodeMover(pos) == true)
             {
                 mat[pos.Linha, pos.Coluna] = true;

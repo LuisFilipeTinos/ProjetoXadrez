@@ -7,8 +7,11 @@ namespace xadrez
 {
     class Rei : Peca
     {
-        public Rei(Cor cor, Tabuleiro tab) : base(cor, tab)
+
+        private PartidaDeXadrez partida;
+        public Rei(Cor cor, Tabuleiro tab, PartidaDeXadrez partidaDeXadrez) : base(cor, tab)
         {
+            this.partida = partidaDeXadrez;
         }
 
         public override string ToString()
@@ -22,6 +25,18 @@ namespace xadrez
             return p == null || p.CorPeca != this.CorPeca;
         }
 
+        private bool TesteTorreParaRoque(Posicao pos)
+        {
+            Peca p = Tab._peca(pos);
+            if(p != null && p is Torre && p.CorPeca == this.CorPeca && p.QtdDeMovimentos == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public override bool[,] MovimentosPossiveis()
         {
             bool[,] mat = new bool[Tab.Linhas, Tab.Colunas];
@@ -81,6 +96,39 @@ namespace xadrez
             if (Tab.PosicaoValida(pos) == true && PodeMover(pos) == true)
             {
                 mat[pos.Linha, pos.Coluna] = true;
+            }
+
+            //#jogadaespecial roque 
+
+            if(this.QtdDeMovimentos == 0 && !partida.Xeque)
+            {
+                //#jogadaespecial roque pequeno
+                Posicao posT1 = new Posicao(PosicaoPeca.Linha, PosicaoPeca.Coluna + 3);
+                if (TesteTorreParaRoque(posT1) == true)
+                {
+                    Posicao p1 = new Posicao(PosicaoPeca.Linha, PosicaoPeca.Coluna + 1);
+                    Posicao p2 = new Posicao(PosicaoPeca.Linha, PosicaoPeca.Coluna + 2);
+                    if(Tab._peca(p1) == null && Tab._peca(p2) == null)
+                    {
+                        mat[PosicaoPeca.Linha, PosicaoPeca.Coluna + 2] = true; 
+                    }
+                }
+            }
+
+            if (this.QtdDeMovimentos == 0 && !partida.Xeque)
+            {
+                //#jogadaespecial roque grande
+                Posicao posT2 = new Posicao(PosicaoPeca.Linha, PosicaoPeca.Coluna - 4);
+                if (TesteTorreParaRoque(posT2) == true)
+                {
+                    Posicao p1 = new Posicao(PosicaoPeca.Linha, PosicaoPeca.Coluna - 1);
+                    Posicao p2 = new Posicao(PosicaoPeca.Linha, PosicaoPeca.Coluna - 2);
+                    Posicao p3 = new Posicao(PosicaoPeca.Linha, PosicaoPeca.Coluna - 3);
+                    if (Tab._peca(p1) == null && Tab._peca(p2) == null && Tab._peca(p3) == null)
+                    {
+                        mat[PosicaoPeca.Linha, PosicaoPeca.Coluna - 2] = true;
+                    }
+                }
             }
 
             return mat;
